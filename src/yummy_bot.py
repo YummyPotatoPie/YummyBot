@@ -68,8 +68,17 @@ async def ban(ctx: Context, username: str, ban_reason=""):
 @yummy_bot.command(name="unban")
 async def ban(ctx: Context, username: str):
     """Command which unban member"""
-    await ctx.channel.send(ctx.guild.bans())
+    if not BotUtilites.check_ban_permission(ctx):
+        await ctx.channel.send("You dont have permission to unban users")
+        return
 
-    await ctx.channel.send("User with this username is not banned")
+    ban_list = await ctx.guild.bans()
+    for ban_entry in ban_list:
+        if ban_entry.user.name == username:
+            await ctx.guild.unban(ban_entry.user)
+            await ctx.channel.send("User unbanned")
+            return
+
+    await ctx.channel.send("User with this username not in ban list")
 
 yummy_bot.run(os.getenv("TOKEN"))
