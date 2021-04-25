@@ -31,4 +31,24 @@ async def repeat(ctx: Context, *messages: str):
 
     await ctx.channel.send(repeat_message)
 
+
+@yummy_bot.command(name="kick")
+async def kick(ctx: Context, user: str, kick_reason=""):
+    """Command which kick member"""
+    for member in ctx.guild.members:
+        if user == member.name:
+            await member.kick(reason=kick_reason)
+            return
+    await ctx.channel.send("User with this username does not exist")
+
+
+@yummy_bot.command(name="ban")
+async def ban(ctx: Context, user: str, ban_reason=""):
+    """Command which ban member"""
+    for member in ctx.guild.members:
+        if user == member.name:
+            await member.ban(reason=ban_reason)
+            return
+    await ctx.channel.send("User with this username does not exist")
+
 yummy_bot.run(os.getenv("TOKEN"))
