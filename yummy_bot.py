@@ -1,5 +1,6 @@
 import os
 import discord
+from BotUtilites import BotUtilites
 from discord.ext.commands import Bot
 from discord.ext.commands import Context
 
@@ -34,21 +35,41 @@ async def repeat(ctx: Context, *messages: str):
 
 @yummy_bot.command(name="kick")
 async def kick(ctx: Context, user: str, kick_reason=""):
-    """Command which kick member"""
+    """Command which kick member if user has permissions to kick him"""
+    if not BotUtilites.check_kick_permission(ctx):
+        await ctx.channel.send("You dont have permissions to kick users")
+        return
+
     for member in ctx.guild.members:
         if user == member.name:
             await member.kick(reason=kick_reason)
+            await ctx.channel.send("User kicked")
             return
+
     await ctx.channel.send("User with this username does not exist")
 
 
 @yummy_bot.command(name="ban")
-async def ban(ctx: Context, user: str, ban_reason=""):
+async def ban(ctx: Context, username: str, ban_reason=""):
     """Command which ban member"""
+    if not BotUtilites.check_ban_permission(ctx):
+        await ctx.channel.send("You dont have permissions to ban users")
+        return
+
     for member in ctx.guild.members:
-        if user == member.name:
+        if username == member.name:
             await member.ban(reason=ban_reason)
+            await ctx.channel.send("User banned")
             return
+
     await ctx.channel.send("User with this username does not exist")
+
+
+@yummy_bot.command(name="unban")
+async def ban(ctx: Context, username: str):
+    """Command which unban member"""
+    await ctx.channel.send(ctx.guild.bans())
+
+    await ctx.channel.send("User with this username is not banned")
 
 yummy_bot.run(os.getenv("TOKEN"))
