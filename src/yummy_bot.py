@@ -1,5 +1,7 @@
 import os
 import discord
+import random
+import math
 from BotUtilites import BotUtilites
 from discord.ext.commands import Bot
 from discord.ext.commands import Context
@@ -28,11 +30,17 @@ async def repeat(ctx: Context, *messages):
     await ctx.channel.send(BotUtilites.string_list_to_string(messages))
 
 
+@yummy_bot.command(name="prob")
+async def repeat(ctx: Context):
+    """Command which send probability of users question"""
+    await ctx.channel.send("I think " + str(math.ceil(random.random() * 100)) + "%")
+
+
 @yummy_bot.command(name="kick")
 async def kick(ctx: Context, user: str, *kick_reason):
     """Command which kick member if user has permissions to kick him"""
     if not BotUtilites.check_kick_permission(ctx):
-        await ctx.channel.send("You dont have permissions to kick users")
+        await ctx.channel.send("You don't have permissions to kick users")
         return
 
     for member in ctx.guild.members:
@@ -48,7 +56,7 @@ async def kick(ctx: Context, user: str, *kick_reason):
 async def ban(ctx: Context, username: str, *ban_reason):
     """Command which ban member"""
     if not BotUtilites.check_ban_permission(ctx):
-        await ctx.channel.send("You dont have permissions to ban users")
+        await ctx.channel.send("You don't have permissions to ban users")
         return
 
     for member in ctx.guild.members:
@@ -64,7 +72,7 @@ async def ban(ctx: Context, username: str, *ban_reason):
 async def ban(ctx: Context, username: str):
     """Command which unban member"""
     if not BotUtilites.check_ban_permission(ctx):
-        await ctx.channel.send("You dont have permission to unban users")
+        await ctx.channel.send("You don't have permission to unban users")
         return
 
     ban_list = await ctx.guild.bans()
