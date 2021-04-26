@@ -17,3 +17,11 @@ class BotUtilites:
         for i in range(len(strings[0])):
             result_string += strings[0][i] + " "
         return result_string
+
+    @staticmethod
+    def convert_surname(username: str) -> str:
+        converted_username = ""
+        for subname in username.split("/s/"):
+            converted_username += subname + " "
+
+        return converted_username[:-1]
