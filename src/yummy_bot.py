@@ -37,14 +37,14 @@ async def repeat(ctx: Context):
 
 
 @yummy_bot.command(name="kick")
-async def kick(ctx: Context, user: str, *kick_reason):
+async def kick(ctx: Context, username: str, *kick_reason):
     """Command which kick member if user has permissions to kick him"""
     if not BotUtilites.check_kick_permission(ctx):
         await ctx.channel.send("You don't have permissions to kick users")
         return
 
     for member in ctx.guild.members:
-        if user == member.name:
+        if BotUtilites.convert_surname(username) == member.name:
             await member.kick(reason=BotUtilites.string_list_to_string(kick_reason))
             await ctx.channel.send("User kicked")
             return
@@ -60,7 +60,7 @@ async def ban(ctx: Context, username: str, *ban_reason):
         return
 
     for member in ctx.guild.members:
-        if username == member.name:
+        if BotUtilites.convert_surname(username) == member.name:
             await member.ban(reason=BotUtilites.string_list_to_string(ban_reason))
             await ctx.channel.send("User banned")
             return
@@ -77,7 +77,7 @@ async def ban(ctx: Context, username: str):
 
     ban_list = await ctx.guild.bans()
     for ban_entry in ban_list:
-        if ban_entry.user.name == username:
+        if ban_entry.user.name == BotUtilites.convert_surname(username):
             await ctx.guild.unban(ban_entry.user)
             await ctx.channel.send("User unbanned")
             return
