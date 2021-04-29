@@ -1,7 +1,7 @@
 from discord.ext.commands import Context
 
 
-class BotUtilites:
+class Utilites:
 
     @staticmethod
     def check_kick_permission(ctx: Context) -> bool:
@@ -19,7 +19,7 @@ class BotUtilites:
         return result_string
 
     @staticmethod
-    def convert_surname(username: str) -> str:
+    def convert_username(username: str) -> str:
         converted_username = ""
         for subname in username.split("/s/"):
             converted_username += subname + " "
