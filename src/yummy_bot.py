@@ -2,7 +2,7 @@ import os
 import discord
 import random
 import math
-from BotUtilites import BotUtilites
+from BotUtilites import Utilites
 from discord.ext.commands import Bot
 from discord.ext.commands import Context
 
@@ -27,7 +27,7 @@ async def members(ctx: Context):
 @yummy_bot.command(name="repeat")
 async def repeat(ctx: Context, *messages):
     """Command which repeat user's message"""
-    await ctx.channel.send(BotUtilites.string_list_to_string(messages))
+    await ctx.channel.send(Utilites.string_list_to_string(messages))
 
 
 @yummy_bot.command(name="prob")
@@ -39,13 +39,13 @@ async def repeat(ctx: Context):
 @yummy_bot.command(name="kick")
 async def kick(ctx: Context, username: str, *kick_reason):
     """Command which kick member if user has permissions to kick him"""
-    if not BotUtilites.check_kick_permission(ctx):
+    if not Utilites.check_kick_permission(ctx):
         await ctx.channel.send("You don't have permissions to kick users")
         return
 
     for member in ctx.guild.members:
-        if BotUtilites.convert_surname(username) == member.name:
-            await member.kick(reason=BotUtilites.string_list_to_string(kick_reason))
+        if Utilites.convert_username(username) == member.name:
+            await member.kick(reason=Utilites.string_list_to_string(kick_reason))
             await ctx.channel.send("User kicked")
             return
 
@@ -55,13 +55,13 @@ async def kick(ctx: Context, username: str, *kick_reason):
 @yummy_bot.command(name="ban")
 async def ban(ctx: Context, username: str, *ban_reason):
     """Command which ban member"""
-    if not BotUtilites.check_ban_permission(ctx):
+    if not Utilites.check_ban_permission(ctx):
         await ctx.channel.send("You don't have permissions to ban users")
         return
 
     for member in ctx.guild.members:
-        if BotUtilites.convert_surname(username) == member.name:
-            await member.ban(reason=BotUtilites.string_list_to_string(ban_reason))
+        if Utilites.convert_username(username) == member.name:
+            await member.ban(reason=Utilites.string_list_to_string(ban_reason))
             await ctx.channel.send("User banned")
             return
 
@@ -71,19 +71,36 @@ async def ban(ctx: Context, username: str, *ban_reason):
 @yummy_bot.command(name="unban")
 async def ban(ctx: Context, username: str):
     """Command which unban member"""
-    if not BotUtilites.check_ban_permission(ctx):
+    if not Utilites.check_ban_permission(ctx):
         await ctx.channel.send("You don't have permission to unban users")
         return
 
     ban_list = await ctx.guild.bans()
     for ban_entry in ban_list:
-        if ban_entry.user.name == BotUtilites.convert_surname(username):
+        if ban_entry.user.name == Utilites.convert_username(username):
             await ctx.guild.unban(ban_entry.user)
             await ctx.channel.send("User unbanned")
             return
 
     await ctx.channel.send("User with this username not in ban list")
 
+
+@yummy_bot.command(name="shot")
+async def shot(ctx: Context, username: str):
+    converted_username = Utilites.convert_username(username)
+    for member in ctx.guild.members:
+        if Utilites.convert_username(username) == member.name:
+            if random.random() > 0.84:
+                await ctx.channel.send("You're killed " + converted_username + "!")
+                await yummy_bot.get_guild(ctx.guild.id).kick(member)
+                return
+            await ctx.channel.send("You're missed")
+            return
+
+    await ctx.channel.send("User with this username does not exist")
+    return
+
+
 yummy_bot.run(os.getenv("TOKEN"))
 
-#quack
+# quack
